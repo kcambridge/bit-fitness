@@ -1,8 +1,8 @@
-import React from 'react'
-import {Text} from 'react-native'
+import React from 'react';
+import {Text} from 'react-native';
 
 const HomeScreen = () => {
-    return <Text>Home Screen</Text>
-}
+  return <Text>Welcome to Bit Fitness</Text>;
+};
 
-export default HomeScreen
+export default HomeScreen;
