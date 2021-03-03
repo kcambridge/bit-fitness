@@ -25,7 +25,7 @@ const AuthProvider: React.FC = ({children}) => {
 
   const loginWithGoogle = useCallback(async () => {
     GoogleSignin.configure({
-      webClientId: '<firebase_web_client_id>',
+      webClientId: '',
     });
     setIsLoggingInState(true);
     try {

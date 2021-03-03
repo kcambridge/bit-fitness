@@ -8,15 +8,27 @@ import HomeScreen from './screens/Home';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScreenProps} from './store/nav/types';
 import AuthProvider from './providers/AuthProvider';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Stack = createStackNavigator<ScreenProps>();
+const Tab = createBottomTabNavigator();
 
+function Home() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+    </Tab.Navigator>
+  );
+}
 const App = () => {
   return (
     <>
       <AuthProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
           </Stack.Navigator>
