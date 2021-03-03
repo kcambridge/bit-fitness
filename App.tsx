@@ -7,18 +7,21 @@ import LoginScreen from './screens/Login';
 import HomeScreen from './screens/Home';
 import {NavigationContainer} from '@react-navigation/native';
 import {ScreenProps} from './store/nav/types';
+import AuthProvider from './providers/AuthProvider';
 
 const Stack = createStackNavigator<ScreenProps>();
 
 const App = () => {
   return (
     <>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthProvider>
     </>
   );
 };
