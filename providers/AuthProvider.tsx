@@ -1,14 +1,15 @@
 import {
   GoogleSignin,
   statusCodes,
-  User,
 } from '@react-native-google-signin/google-signin';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
 
 interface AuthContextType {
-  user: User | null;
+  user: FirebaseAuthTypes.User | null;
   loggedIn: boolean;
   isLoggingIn: boolean;
+  isInitializing: boolean;
   error: any | string;
   loginWithGoogle: () => void;
 }
@@ -18,9 +19,13 @@ export const AuthContext = React.createContext<
 >({});
 
 const AuthProvider: React.FC = ({children}) => {
-  const [user, setUserState] = useState<User | null>(null);
+  const [
+    firebaseUser,
+    setFirebaseUserState,
+  ] = useState<FirebaseAuthTypes.User | null>(null);
   const [loggedIn, setLoggedInState] = useState(false);
   const [isLoggingIn, setIsLoggingInState] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const [error, setErrorState] = useState<null | string>(null);
 
   const loginWithGoogle = useCallback(async () => {
@@ -31,11 +36,15 @@ const AuthProvider: React.FC = ({children}) => {
     try {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
-      setUserState(userInfo);
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        userInfo.idToken
+      );
+      const fireBaseResult = await auth().signInWithCredential(
+        googleCredential
+      );
+      console.log(fireBaseResult);
       setLoggedInState(true);
     } catch (error) {
-      console.log('There was an error', error);
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         setErrorState('Sign in cancelled');
         // user cancelled the login flow
@@ -53,12 +62,33 @@ const AuthProvider: React.FC = ({children}) => {
     setIsLoggingInState(false);
   }, []);
 
+  //This firebase auth callback checks if the user is already logged in
+  const onAuthStateChanged = useCallback(
+    async (user: FirebaseAuthTypes.User | null) => {
+      setIsInitializing(false);
+      if (user) {
+        //if user is not null, they are logged in~
+        setIsLoggingInState(false);
+        setLoggedInState(true);
+        setFirebaseUserState(user);
+      }
+    },
+    []
+  );
+
+  //kick off firebase initialization and checking user loggedin state
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: firebaseUser,
         loggedIn,
         isLoggingIn,
+        isInitializing,
         loginWithGoogle,
         error,
       }}>

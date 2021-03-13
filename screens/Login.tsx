@@ -1,6 +1,6 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
 import {ScreenProps} from '../store/nav/types';
 import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import useAuth from '../hooks/useAuth';
@@ -14,10 +14,9 @@ interface LoginProps {
 }
 
 const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
-  const {loggedIn, loginWithGoogle, isLoggingIn} = useAuth();
+  const {loggedIn, loginWithGoogle, isLoggingIn, isInitializing} = useAuth();
   useEffect(() => {
     if (loggedIn) {
-      console.log('Going home!');
       navigation.navigate('Home');
     }
   }, [loggedIn]);
@@ -27,13 +26,16 @@ const LoginScreen: React.FC<LoginProps> = ({navigation}) => {
         <View style={styles.logoContainer}>
           <Logo width={300} height={150} />
         </View>
-        <GoogleSigninButton
-          style={{width: 192, height: 48}}
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={loginWithGoogle}
-          disabled={isLoggingIn}
-        />
+        {(isInitializing || isLoggingIn) && <ActivityIndicator />}
+        {!isInitializing && (
+          <GoogleSigninButton
+            style={{width: 192, height: 48}}
+            size={GoogleSigninButton.Size.Wide}
+            color={GoogleSigninButton.Color.Dark}
+            onPress={loginWithGoogle}
+            disabled={isLoggingIn}
+          />
+        )}
       </View>
     </ScreenShell>
   );
