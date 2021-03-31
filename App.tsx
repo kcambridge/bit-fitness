@@ -9,14 +9,16 @@ import {NavigationContainer} from '@react-navigation/native';
 import {ScreenProps} from './store/nav/types';
 import AuthProvider from './providers/AuthProvider';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import ProfileScreen from './screens/Profile';
 
 const Stack = createStackNavigator<ScreenProps>();
 const Tab = createBottomTabNavigator();
 
 function Home() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{tabBarVisible: true}}>
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
@@ -30,7 +32,7 @@ const App = () => {
               headerShown: false,
             }}>
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Home" component={Home} />
           </Stack.Navigator>
         </NavigationContainer>
       </AuthProvider>

@@ -1,6 +1,6 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useEffect} from 'react';
-import {ActivityIndicator, Image, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {ScreenProps} from '../store/nav/types';
 import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import useAuth from '../hooks/useAuth';
