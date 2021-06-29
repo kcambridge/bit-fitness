@@ -4,6 +4,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import React, {useCallback, useEffect, useState} from 'react';
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import Config from 'react-native-config';
 
 interface AuthContextType {
   user: FirebaseAuthTypes.User | null;
@@ -30,7 +31,7 @@ const AuthProvider: React.FC = ({children}) => {
 
   const loginWithGoogle = useCallback(async () => {
     GoogleSignin.configure({
-      webClientId: '',
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
     });
     setIsLoggingInState(true);
     try {
